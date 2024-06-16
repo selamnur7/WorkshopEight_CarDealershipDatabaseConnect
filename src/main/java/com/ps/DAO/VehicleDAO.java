@@ -4,10 +4,7 @@ import com.ps.models.Dealership;
 import com.ps.models.Vehicle;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,6 +178,52 @@ public class VehicleDAO {
             e.printStackTrace();
         }
         return vehicles;
+    }
+
+    public int createVehicle(Vehicle vehicle) {
+        int generatedId = -1;
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        "INSERT INTO vehicles(VIN, year, vehiclemake, vehiclemodel, vehicletype, color, SOLD, odometer, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+        ) {
+            preparedStatement.setInt(1, vehicle.getVin());
+            preparedStatement.setInt(2, vehicle.getYear());
+            preparedStatement.setString(3, vehicle.getMake());
+            preparedStatement.setString(4, vehicle.getModel());
+            preparedStatement.setString(5, vehicle.getVehicleType());
+            preparedStatement.setString(6, vehicle.getColor());
+            preparedStatement.setBoolean(7, vehicle.getSold());
+            preparedStatement.setInt(8, vehicle.getOdometer());
+            preparedStatement.setInt(9, vehicle.getPrice());
+
+            preparedStatement.executeUpdate();
+
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                while (keys.next()) {
+                    generatedId = keys.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return generatedId;
+    }
+
+    public void deleteVehicle(int vin){
+        try(
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        "DELETE FROM vehicles WHERE VIN = ?"
+                );
+        ){
+            preparedStatement.setInt(1, vin);
+            preparedStatement.executeUpdate();
+        } catch (SQLException sql){
+            sql.printStackTrace();
+        }
     }
 
     public Vehicle generateVehicleFromRS(ResultSet resultSet) throws SQLException {
