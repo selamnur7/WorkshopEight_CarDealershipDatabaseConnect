@@ -1,6 +1,8 @@
 package com.ps;
 
+import com.ps.DAO.DealershipDAO;
 import com.ps.models.Dealership;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,11 +10,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
-    private Dealership dealership;
+    private static DealershipDAO dealershipDAO;
     private static Scanner scanner = new Scanner(System.in);
 
-    public void display() {
-        init();
+    public static void display(String[] args) {
+        init(args);
 
         int mainMenuCommand;
 
@@ -71,7 +73,12 @@ public class UserInterface {
         } while (mainMenuCommand != 99);
     }
 
-    private void init() {
-//        this.dealership = DealershipFileManager.getDealership();
+    private static void init(String[] args) {
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl("jdbc:mysql://localhost:3306/dealership_db");
+        basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        basicDataSource.setUsername(args[0]);
+        basicDataSource.setPassword(args[1]);
+        dealershipDAO = new DealershipDAO(basicDataSource);
     }
 }
