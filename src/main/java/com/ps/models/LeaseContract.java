@@ -1,25 +1,33 @@
 package com.ps.models;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public class LeaseContract extends Contract{
+    private BasicDataSource dataSource;
+
     private float endingValue;
     private float leaseFee;
-    public LeaseContract(String dateOfContract, String customerName, String customerEmail, String vehicleSold) {
-        super(dateOfContract, customerName, customerEmail, vehicleSold);
+
+    public LeaseContract(int id, int vin, String dateOfContract, String customerName, String customerEmail, Boolean vehicleSold, float totalPrice, float monthlyPayment, Vehicle vehicle) {
+        super(id, vin, dateOfContract, customerName, customerEmail, vehicleSold, totalPrice, monthlyPayment, vehicle);
     }
 
-    public LeaseContract(String dateOfContract, String customerName, String customerEmail, String vehicleSold, float endingValue, float leaseFee) {
-        super(dateOfContract, customerName, customerEmail, vehicleSold);
-        this.endingValue = .5f * this.totalPrice;
-        this.leaseFee = .07f * this.totalPrice;
-    }
+
 
     public float getTotalPrice() {
-        return (endingValue + leaseFee);
+        float totalPrice = (endingValue + leaseFee);
+        return totalPrice;
     }
 
     @Override
     public float getMonthlyPayment() {
-        return (getTotalPrice() * .04f);
+        float monthlyPayment = (getTotalPrice() * .04f);
+        return monthlyPayment;
     }
 
     public float getEndingValue() {

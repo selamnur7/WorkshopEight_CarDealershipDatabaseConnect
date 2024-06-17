@@ -4,37 +4,35 @@ public class SalesContract extends Contract {
     private float salesTaxAmount = .05f;
     private int processingFee = 295;
     private int recordingFee = 100;
-    private boolean isFinanced = true;
-    public SalesContract(String dateOfContract, String customerName, String customerEmail, String vehicleSold) {
-        super(dateOfContract, customerName, customerEmail, vehicleSold);
+    private boolean isFinanced;
+
+    public SalesContract(int id, int vin, String dateOfContract, String customerName, String customerEmail, Boolean vehicleSold, float totalPrice, float monthlyPayment, Vehicle vehicle) {
+        super(id, vin, dateOfContract, customerName, customerEmail, vehicleSold, totalPrice, monthlyPayment, vehicle);
     }
 
-    public SalesContract(String dateOfContract, String customerName, String customerEmail, String vehicleSold, float salesTaxAmount, int processingFee, int recordingFee) {
-        super(dateOfContract, customerName, customerEmail, vehicleSold);
-        this.salesTaxAmount = salesTaxAmount;
-        this.processingFee = processingFee;
-        this.recordingFee = recordingFee;
-    }
 
     @Override
     public float getTotalPrice() {
+        float totalPrice;
         if (this.totalPrice < 10_000) {
-            return (this.totalPrice + (this.totalPrice * salesTaxAmount) + recordingFee + processingFee);
+            return totalPrice = (this.totalPrice + (this.totalPrice * salesTaxAmount) + recordingFee + processingFee);
         } else {
-            return (this.totalPrice + (this.totalPrice * salesTaxAmount) + recordingFee + 495);
+            return totalPrice = (this.totalPrice + (this.totalPrice * salesTaxAmount) + recordingFee + 495);
         }
     }
 
     @Override
     public float getMonthlyPayment() {
+        float totalPrice;
         if (this.totalPrice < 10_000 && isFinanced) {
             System.out.println("Monthly Payment for 24 months");
-            return (getTotalPrice() * 0.0525f);
+            return totalPrice = (getTotalPrice() * 0.0525f);
         } else if (this.totalPrice >= 10_000 && isFinanced) {
             System.out.println("Monthly Payment for 48 months");
-            return (getTotalPrice() * 0.0425f);
+            return totalPrice = (getTotalPrice() * 0.0425f);
+        } else {
+            return totalPrice = this.totalPrice;
         }
-        return totalPrice;
     }
 
     public boolean isFinanced() {
